@@ -6,11 +6,9 @@
  */
 import { assert } from './common.js'
 export function created(data, cb) {
-
   assert(data, 'data is require')
   assert(cb, 'cb is require')
   let res;
-
   if (data instanceof Array) {
     res = []
     for (let i = 0; i < data.length; i++) {
@@ -30,7 +28,6 @@ export function created(data, cb) {
       }
     }
   }
-
   return new Proxy(res, {
     set(data, name, value) {
       data[name] = value
