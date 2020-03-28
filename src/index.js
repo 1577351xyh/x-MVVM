@@ -1,5 +1,5 @@
 import { created } from './proxy.js';
-import { parse } from './domparser.js'
+import { parseDOM,parseDirective } from './parser.js'
 import { assert, getElement } from './common.js'
 
 // let a = {
@@ -14,5 +14,8 @@ import { assert, getElement } from './common.js'
 
 let dom = getElement('#app')
 
-let res = parse(dom)
-console.log(res)
+let res = parseDOM(dom)
+console.log(res.attrs)
+
+let att = parseDirective(res.attrs)
+console.log(att)

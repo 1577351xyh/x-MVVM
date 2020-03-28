@@ -2,9 +2,9 @@
  *1.dom编译的内核 
  * @param {*} dom  
  */
-import { assert, getElement } from './common.js'
+import { assert } from './common.js'
 
-export function parse(dom) {
+export function parseDOM(dom) {
   assert(dom, 'dom is requierd')
   assert(dom instanceof Node)
   /**
@@ -24,13 +24,14 @@ export function parse(dom) {
       attrs[attr.name] = attr.value
     })
     console.log()
-    let children = Array.from(dom.childNodes).map(child => parse(child)).filter(child => child !== undefined)
+    let children = Array.from(dom.childNodes).map(child => parseDOM(child)).filter(child => child !== undefined)
 
     // 源生标签判断
     let isHtml = dom.constructor !== HTMLUnknownElement && dom.constructor !== HTMLElement;
     return {
       type: 'element',
       tag,
+      el: dom,
       attrs,
       children,
       isHtml,
@@ -45,6 +46,7 @@ export function parse(dom) {
     if (data) {
       return {
         type: 'text',
+        el: dom,
         data,
       }
     } else {
@@ -52,4 +54,39 @@ export function parse(dom) {
     }
 
   }
+}
+
+/**
+ *1.指令编译 bind @  
+ * @param {*} dom  
+ */
+export function parseDirective(attrs) {
+  assert(attrs)
+  assert(attrs.constructor == Object)
+  let directives = []
+
+  for (let key in attrs) {
+    let attrObj;
+
+    if (key.startsWith('v-')) {
+      let [name, arg] = key.split(':')
+      attrObj = { name: name.replace(/^v\-/, ''), arg }
+
+    } else if (key.startsWith(':')) {
+      attrObj = { name: 'bind', arg: key.substring(1) }
+
+    } else if (key.startsWith('@')) {
+      attrObj = { name: 'on', arg: key.substring(1) }
+    }
+
+    if (attrObj) {
+      assert(attrObj.name == 'bind' && attrObj.arg || attrObj.name != 'bind', 'not defind' + key)
+      attrObj.value = attrs[key]
+      directives.push(attrObj)
+    }
+
+  }
+
+
+  return directives
 }
