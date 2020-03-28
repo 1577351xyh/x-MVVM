@@ -13,19 +13,27 @@ export function parse(dom) {
    * 3.children
    */
   //递归后会出现文本节点,文本节点就会报错
-
   if (dom.nodeType == document.ELEMENT_NODE) {
-    let type = dom.tagName
+    /**
+     * 还需要在节点中判断是不是自定义的标签或者是原生html标签
+     * 1.加了 "-" 的自定义标签会被html认为是源生标签
+     */
+    let tag = dom.tagName.toLowerCase()
     let attrs = {}
     Array.from(dom.attributes).forEach(attr => {
       attrs[attr.name] = attr.value
     })
     console.log()
     let children = Array.from(dom.childNodes).map(child => parse(child)).filter(child => child !== undefined)
+
+    // 源生标签判断
+    let isHtml = dom.constructor !== HTMLUnknownElement && dom.constructor !== HTMLElement;
     return {
-      type,
+      type: 'element',
+      tag,
       attrs,
-      children
+      children,
+      isHtml,
     }
   } else if (dom.nodeType == document.TEXT_NODE) {
     /**
