@@ -1,3 +1,5 @@
+
+
 /**
  *1.dom编译的内核 
  * @param {*} dom  
@@ -56,6 +58,8 @@ export function parseDOM(dom) {
   }
 }
 
+
+
 /**
  *1.指令编译 bind @  
  * @param {*} dom  
@@ -89,4 +93,15 @@ export function parseDirective(attrs) {
 
 
   return directives
+}
+
+/**
+ * 1.过滤出事件
+ * @param {*} directive 
+ */
+
+export function parseListeners(directive) {
+  assert(directive)
+  assert(directive instanceof Array)
+  directive.filter(directive => directive.name == 'on')
 }
