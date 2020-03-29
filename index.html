@@ -7,12 +7,13 @@
     <title>x-MVVM</title>
   </head>
   <body>
-    <div id="app" v-if="ddd" :ti="sss" @click="fn(1,2)" class="xxx" v-bind:title="sss">
-      <div></div>
+    <div id="app"  :title="a+c" @click="fn(1,2)" class="xxx">
+      <input type="text" v-bind:value="a+c">
       <a-sss></a-sss>
+      sdasdasdsa
       <cmp></cmp>
-      <ul id="ddd">
-        <li title="aaa"></li>
+      <ul :title="c">
+        11111
       </ul>
     </div>
     <script src="src/index.js" type="module"></script>

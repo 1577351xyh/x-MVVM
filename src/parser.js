@@ -37,6 +37,7 @@ export function parseDOM(dom) {
       attrs,
       children,
       isHtml,
+      _blue: true
     }
   } else if (dom.nodeType == document.TEXT_NODE) {
     /**
@@ -50,6 +51,8 @@ export function parseDOM(dom) {
         type: 'text',
         el: dom,
         data,
+        _blue: true
+
       }
     } else {
       return undefined
@@ -90,8 +93,6 @@ export function parseDirective(attrs) {
     }
 
   }
-
-
   return directives
 }
 
@@ -103,5 +104,5 @@ export function parseDirective(attrs) {
 export function parseListeners(directive) {
   assert(directive)
   assert(directive instanceof Array)
-  directive.filter(directive => directive.name == 'on')
+  return directive.filter(directive => directive.name == 'on')
 }

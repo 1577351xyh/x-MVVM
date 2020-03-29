@@ -5,7 +5,7 @@
  * @param {*} cb 触发set后的回调
  */
 import { assert } from './common.js'
-export function created(data, cb) {
+export function createProxy(data, cb) {
   assert(data, 'data is require')
   assert(cb, 'cb is require')
   let res;
