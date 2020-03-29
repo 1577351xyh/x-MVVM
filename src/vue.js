@@ -9,16 +9,17 @@ export default class Vue {
   constructor(options, component) {
     assert(options);
     // super(options,null)
+    //初始化--init
     let root = getElement(options.el)
     let domTree = parseDOM(root)
     let vdomTree = createVDom(domTree, this)
 
-    // return vdomTree
-
     this._root = vdomTree;
-    this._data = createProxy(options.data || {}, () => {
+    this._data = createProxy({...options.data,...options.methods} || {}, () => {
       this.render()
     })
+    this._doInit()
+    //更新--update
     this.render()
   }
   render(){
@@ -28,6 +29,12 @@ export default class Vue {
     this._root.$children.forEach(element => {
         element.render()
     });
+    this._update()
+  }
+  _doInit(){
+
+  }
+  _update(){
 
   }
 }

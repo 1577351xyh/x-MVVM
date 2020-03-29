@@ -5,6 +5,11 @@ window.app = new Vue({
   data: {
     a: 3,
     c: 5
+  },
+  methods: {
+    fn() {
+      alert(1)
+    }
   }
 })
 console.log(app)
