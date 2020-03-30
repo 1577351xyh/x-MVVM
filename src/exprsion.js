@@ -46,7 +46,52 @@ export function expr(str, data) {
   return eval(str2);
 }
 
+/**
+ * 1.{{}}解析
+ * @param {} str 
+ * @param {*} data 
+ */
+export function compileStringTemplate(str, data){
+  let s=0;
 
+  //{{xxx}}
+  let arr=[];
+
+  let n=0;
+  while((n=str.indexOf('{{', s))!=-1){
+    arr.push(str.substring(s, n));    //?
+
+    let m=2;
+    let e;
+    for(let i=n+2;i<str.length;i++){
+      if(str[i]=='{')m++;
+      else if(str[i]=='}')m--;
+
+      if(m==0){
+        e=i;
+        break;
+      }
+    }
+
+    if(m>0){
+      throw new Error('花括号不匹配');
+    }
+
+    let strExpr=str.substring(n+2, e-1);
+    let result=expr(strExpr, data);
+
+    if(typeof result=='object'){
+      arr.push(JSON.stringify(result));
+    }else{
+      arr.push(result);
+    }
+    s=e+1;
+  }
+
+  arr.push(str.substring(s));
+
+  return arr.join('');
+}
 
 /**
  * 解析字符串和表达式

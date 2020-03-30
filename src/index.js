@@ -10,6 +10,12 @@ window.app = new Vue({
     fn() {
       alert(1)
     }
+  },
+  created() {
+    console.log('init完成')
+  },
+  updeted() {
+    console.log('update完成')
   }
 })
 console.log(app)
