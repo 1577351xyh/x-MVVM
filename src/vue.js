@@ -15,26 +15,28 @@ export default class Vue {
     let vdomTree = createVDom(domTree, this)
 
     this._root = vdomTree;
-    this._data = createProxy({...options.data,...options.methods} || {}, () => {
+    this._data = createProxy({ ...options.data, ...options.methods } || {}, () => {
       this.render()
     })
+    this.status = 'init'
     this._doInit()
     //更新--update
     this.render()
   }
-  render(){
+  render() {
+    this.status = 'update'
     //渲染自己
     this._root.render()
     //渲染子集
     this._root.$children.forEach(element => {
-        element.render()
+      element.render()
     });
     this._update()
   }
-  _doInit(){
+  _doInit() {
 
   }
-  _update(){
+  _update() {
 
   }
 }

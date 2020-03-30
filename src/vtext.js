@@ -7,8 +7,9 @@ export default class VTxet extends VNode {
     assert(options.data)
     super(options.el, component)
     this._data = options.data;
+    this.state='init'
   }
   render() {
-
+    this.state='update'
   }
 }

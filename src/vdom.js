@@ -4,7 +4,6 @@ import VComponents from './vcomponet.js'
 import VText from './vtext.js'
 import { assert, getElement } from './common.js'
 
-
 // 创建虚拟dom数
 export function createVDom(node, component) {
   assert(node)
@@ -20,7 +19,6 @@ export function createVDom(node, component) {
     } else {
       //自定义组件
       parse = new VComponents(node, component)
-
     }
     parse.$children = node.children.map(child => createVDom(child, component))
     return parse;

@@ -7,39 +7,54 @@ import VElement from './velement.js'
  */
 export default {
   // {name:'bind',arg:'title',value:'a'}
-  bind(velement, directive) {
-    assert(velement)
-    assert(directive)
-    let result = expr(directive.value, velement._component._data)
-    velement._el.setAttribute(directive.arg, result)
+  bind: {
+    init: null,
+    update(velement, directive) {
+      assert(velement)
+      assert(directive)
+      let result = expr(directive.value, velement._component._data)
+      velement._el.setAttribute(directive.arg, result)
+    },
+    destory: null
+
   },
   // {name:'on',arg:'click',value:'fn(1,3)'}
-  on(velement, directive) {
-    // value => 'fn'
-    // value => 'fn()'
-    // value => 'fn(1,3)+sum(3,2)'
-    velement._el.addEventListener(directive.arg, function () {
-      let str = directive.value;
-      //fn
-      if(/^[\$_a-z][a-z0-9_\$]*$/i.test(str)){
-        str += '()';
-      }
-      expr(str, velement._component._data)
-    }, false)
+  on: {
+    init(velement, directive) {
+      // value => 'fn'
+      // value => 'fn()'
+      // value => 'fn(1,3)+sum(3,2)'
+      velement._el.addEventListener(directive.arg, function () {
+        let str = directive.value;
+        //fn
+        if (/^[\$_a-z][a-z0-9_\$]*$/i.test(str)) {
+          str += '()';
+        }
+        expr(str, velement._component._data)
+      }, false)
+    },
+    update: null,
+    destory() {
+
+    }
 
   },
   // {name:'show',arg:'undefind',value: 'show'}
-  show(velement, directive) {
-    assert(velement)
-    assert(directive)
-    assert(directive instanceof VElement)
+  show: {
+    init: null,
+    update(velement, directive) {
+      assert(velement)
+      assert(directive)
+      assert(directive instanceof VElement)
 
-    let result = expr(directive.value, velement._component._data)
-    if (result) {
-      velement._el.style.display = ''
-    } else {
-      velement._el.style.display = 'none'
-    }
+      let result = expr(directive.value, velement._component._data)
+      if (result) {
+        velement._el.style.display = ''
+      } else {
+        velement._el.style.display = 'none'
+      }
+    },
+    destory: null
   },
   // {name:'hmtl',arg:'undefind',value: 'show'}
   html() {
