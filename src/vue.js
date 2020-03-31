@@ -17,7 +17,11 @@ export default class Vue {
     this.updeted = options.updeted;
 
     this._root = vdomTree;
-    this._data = createProxy({ ...options.data, ...options.methods } || {}, () => {
+    this._statiDate ={
+      ...options.methods,
+
+    }
+    this._data = createProxy(options.data,this._statiDate || {}, () => {
       this.render()
     })
     this.status = 'init'

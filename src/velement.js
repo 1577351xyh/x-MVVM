@@ -30,7 +30,22 @@ export default class VElment extends VNode {
     this._directive('update')
   }
   _directive(type) {
-    this.$directives.forEach(directive => {
+    //有限执行vmodel
+    this.$directives
+      .filter(item => item.name == 'model')
+      .forEach(directive => {
+        let dirObj = directiveFn[directive.name];
+        assert(dirObj)
+        let dirFn = dirObj[type]
+        if (dirFn) {
+          dirFn(this, directive)
+        }
+      })
+
+
+    this.$directives
+    .filter(item => item.name != 'model')
+    .forEach(directive => {
       let dirObj = directiveFn[directive.name];
       assert(dirObj)
       let dirFn = dirObj[type]

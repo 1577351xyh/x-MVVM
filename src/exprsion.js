@@ -42,7 +42,7 @@ export function expr(str, data) {
   });
 
   let str2 = arr2.join('');
-
+  console.log(str2)
   return eval(str2);
 }
 
@@ -80,6 +80,7 @@ export function compileStringTemplate(str, data){
     let strExpr=str.substring(n+2, e-1);
     let result=expr(strExpr, data);
 
+    //复杂类型的深度绑定
     if(typeof result=='object'){
       arr.push(JSON.stringify(result));
     }else{

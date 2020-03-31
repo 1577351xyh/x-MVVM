@@ -7,16 +7,11 @@
     <title>x-MVVM</title>
   </head>
   <body>
-    <div id="app"  :title="a+c" @click="fn(1,2)" class="xxx">
+    <div id="app"  :title="a+c" class="xxx">
       <input type="text" v-bind:value="a+c">
-      <a-sss></a-sss>
-      sdasdasdsa
-      {{a+c}}
-      <cmp></cmp>
-      <ul :title="c">
-        <li></li>
-      </ul>
+      <input type="text" v-model="a">
       {{a}}
+
       <button @click="fn">按钮</button>
     </div>
     <script src="src/index.js" type="module"></script>

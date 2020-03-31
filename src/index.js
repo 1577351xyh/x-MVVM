@@ -7,8 +7,9 @@ window.app = new Vue({
     c: 5
   },
   methods: {
-    fn() {
-      alert(1)
+    fn(ev) {
+      this.a++
+      console.log(ev)
     }
   },
   created() {

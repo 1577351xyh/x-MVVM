@@ -14,6 +14,7 @@ export default {
       assert(directive)
       let result = expr(directive.value, velement._component._data)
       velement._el.setAttribute(directive.arg, result)
+      velement._el[directive.arg] = result;
     },
     destory: null
 
@@ -24,12 +25,13 @@ export default {
       // value => 'fn'
       // value => 'fn()'
       // value => 'fn(1,3)+sum(3,2)'
-      velement._el.addEventListener(directive.arg, function () {
+      velement._el.addEventListener(directive.arg, function (ev) {
         let str = directive.value;
         //fn
         if (/^[\$_a-z][a-z0-9_\$]*$/i.test(str)) {
-          str += '()';
+          str += '($event)';
         }
+        velement._component._statiDate.$event = ev;
         expr(str, velement._component._data)
       }, false)
     },
@@ -78,8 +80,11 @@ export default {
     velement._el.innerHTML = '';
     velement._el.appendChild(node);
   },
-  model() {
-
+  model: {
+    init(velement, directive) {
+      velement.$directives.push({ name: 'bind', arg: 'value', value: directive.value })
+      velement.$directives.push({ name: 'on', arg: 'input', value: `${directive.value}=$event.target.value` })
+    }
   },
   'if'() {
 
