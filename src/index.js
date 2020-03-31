@@ -12,6 +12,13 @@ window.app = new Vue({
       console.log(ev)
     }
   },
+  directives:{
+    a:{
+      init(){
+        console.log('我是啊')
+      }
+    }
+  },
   created() {
     console.log('init完成')
   },

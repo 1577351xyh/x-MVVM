@@ -86,6 +86,9 @@ export default {
       velement.$directives.push({ name: 'on', arg: 'input', value: `${directive.value}=$event.target.value` })
     }
   },
+  cloak(){
+
+  },
   'if'() {
 
   },

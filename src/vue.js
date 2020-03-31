@@ -3,11 +3,15 @@ import { assert, getElement } from './common.js'
 import { createVDom } from './vdom.js'
 import { parseDOM } from './parser.js'
 import { createProxy } from './proxy.js'
-
+import directives from './directive.js'
 
 export default class Vue {
   constructor(options, component) {
     assert(options);
+    this._directives={
+      ...directives,
+      ...options.directives
+    }
     // super(options,null)
     //初始化--init
     let root = getElement(options.el)

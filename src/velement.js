@@ -17,7 +17,7 @@ export default class VElment extends VNode {
     this.$directives = parseDirective(this.$attrs)
     this.$parseListeners = parseListeners(this.$directives)
 
-
+    this.component =component
     this.status = 'init'
     this._directive('init')
 
@@ -30,28 +30,21 @@ export default class VElment extends VNode {
     this._directive('update')
   }
   _directive(type) {
-    //有限执行vmodel
-    this.$directives
-      .filter(item => item.name == 'model')
-      .forEach(directive => {
-        let dirObj = directiveFn[directive.name];
-        assert(dirObj)
-        let dirFn = dirObj[type]
-        if (dirFn) {
-          dirFn(this, directive)
-        }
-      })
 
+    //优先执行vmodel
+    doDirective.call(this,this.$directives.filter(item => item.name == 'model'))
+    doDirective.call(this,this.$directives.filter(item => item.name != 'model'))
 
-    this.$directives
-    .filter(item => item.name != 'model')
-    .forEach(directive => {
-      let dirObj = directiveFn[directive.name];
-      assert(dirObj)
-      let dirFn = dirObj[type]
-      if (dirFn) {
-        dirFn(this, directive)
-      }
-    })
+    function doDirective(arr) {
+      this.$directives
+        .forEach(directive => {
+          let dirObj = this.component._directives[directive.name];
+          assert(dirObj)
+          let dirFn = dirObj[type]
+          if (dirFn) {
+            dirFn(this, directive)
+          }
+        })
+    }
   }
 }
