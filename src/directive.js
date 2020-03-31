@@ -25,6 +25,7 @@ export default {
       // value => 'fn'
       // value => 'fn()'
       // value => 'fn(1,3)+sum(3,2)'
+      console.log('监听')
       velement._el.addEventListener(directive.arg, function (ev) {
         let str = directive.value;
         //fn
@@ -86,13 +87,44 @@ export default {
       velement.$directives.push({ name: 'on', arg: 'input', value: `${directive.value}=$event.target.value` })
     }
   },
-  cloak(){
-
+  cloak: {
+    update(velement, directive) {
+      velement._el.removeAttribute('v-cloak')
+    }
   },
-  'if'() {
+  'if': {
+    init(velement, directive) {
+      let holder = document.createComment('vue holder');
+      velement.__parent = velement._el.parentNode;
+      velement.__holder = holder;
+      velement.__el = velement._el;
+    },
+    update(velement, directive) {
+      let res = expr(directive.value, velement._component._data);
 
+      if (res) {
+        if (velement.__holder.parentNode) {
+          velement.__parent.replaceChild(velement.__el, velement.__holder);
+        }
+      } else {
+        velement.__parent.replaceChild(velement.__holder, velement.__el);
+      }
+    },
+    destory(velement, directive) { }
   },
-  'else-if'() {
-
+  'else': {
+    init(velement, directive) { },
+    update(velement, directive) { },
+    destory(velement, directive) { }
   },
+  'else-if': {
+    init(velement, directive) { },
+    update(velement, directive) { },
+    destory(velement, directive) { }
+  },
+  'for': {
+    init(velement, directive) { },
+    update(velement, directive) { },
+    destory(velement, directive) { }
+  }
 }

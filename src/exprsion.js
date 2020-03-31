@@ -42,7 +42,6 @@ export function expr(str, data) {
   });
 
   let str2 = arr2.join('');
-  console.log(str2)
   return eval(str2);
 }
 
@@ -90,7 +89,6 @@ export function compileStringTemplate(str, data){
   }
 
   arr.push(str.substring(s));
-
   return arr.join('');
 }
 

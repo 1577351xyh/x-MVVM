@@ -1,7 +1,6 @@
 import { assert } from './common.js'
 import { VNode } from './vnode.js';
 import { parseDirective, parseListeners } from './parser.js'
-import directiveFn from './directive.js'
 
 export default class VElment extends VNode {
   constructor(options, component) {
@@ -23,21 +22,21 @@ export default class VElment extends VNode {
 
   }
   render() {
-    this.status = 'update'
-    // 渲染子集
-    // this.$children
     //渲染自己
     this._directive('update')
+    // 渲染子集
+    // this.$children
+    this.status = 'update'
+
   }
   _directive(type) {
 
     //优先执行vmodel
-    doDirective.call(this,this.$directives.filter(item => item.name == 'model'))
-    doDirective.call(this,this.$directives.filter(item => item.name != 'model'))
+    doDirective.call(this,this.$directives.filter(item => item.name === 'model'))
+    doDirective.call(this,this.$directives.filter(item => item.name !== 'model'))
 
     function doDirective(arr) {
-      this.$directives
-        .forEach(directive => {
+      arr.forEach(directive => {
           let dirObj = this.component._directives[directive.name];
           assert(dirObj)
           let dirFn = dirObj[type]

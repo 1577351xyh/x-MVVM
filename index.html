@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>x-MVVM</title>
+    <style>
+      *[v-cloak] {
+        display: none;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"  :title="a+c" class="xxx">
-      <input type="text" v-bind:value="a+c">
-      <input type="text" v-a="a" v-model="a">
-      {{a}}
-
-      <button @click="fn">按钮</button>
+    <div id="app" v-cloak>
+      <button @click="fn2">按钮</button>
+      <div v-if="show">我是内容</div>
+      <!-- 是是是 -->
     </div>
     <script src="src/index.js" type="module"></script>
   </body>

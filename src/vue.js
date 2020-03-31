@@ -23,7 +23,6 @@ export default class Vue {
     this._root = vdomTree;
     this._statiDate ={
       ...options.methods,
-
     }
     this._data = createProxy(options.data,this._statiDate || {}, () => {
       this.render()
@@ -41,8 +40,8 @@ export default class Vue {
     this._root.$children.forEach(element => {
       element.render()
     });
-    this.updeted && this.updeted.call(this._data)
-
     this.status = 'update'
+    console.log('update')
+    this.updeted && this.updeted.call(this._data)
   }
 }
