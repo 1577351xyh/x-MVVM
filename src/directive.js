@@ -14,7 +14,7 @@ export default {
     update(velement, directive) {
       assert(velement)
       assert(directive)
-      let result = expr(directive.value, velement._component._data)
+      let result = expr(directive.value, velement._data)
       velement._el.setAttribute(directive.arg, result)
       velement._el[directive.arg] = result;
     },
@@ -27,7 +27,6 @@ export default {
       // value => 'fn'
       // value => 'fn()'
       // value => 'fn(1,3)+sum(3,2)'
-      console.log('监听')
       velement._el.addEventListener(directive.arg, function (ev) {
         let str = directive.value;
         //fn
@@ -35,7 +34,7 @@ export default {
           str += '($event)';
         }
         velement._component._statiDate.$event = ev;
-        expr(str, velement._component._data)
+        expr(str, velement._data)
       }, false)
     },
     update: null,
@@ -52,7 +51,7 @@ export default {
       assert(directive)
       assert(directive instanceof VElement)
 
-      let result = expr(directive.value, velement._component._data)
+      let result = expr(directive.value, velement._data)
       if (result) {
         velement._el.style.display = ''
       } else {
@@ -67,7 +66,7 @@ export default {
     assert(directive)
     assert(directive instanceof VElement)
 
-    let result = expr(directive.value, velement._component._data)
+    let result = expr(directive.value, velement._data)
     velement._el.innerHTML = result
   },
   text() {
@@ -77,7 +76,7 @@ export default {
     assert(directive);
     assert(directive.value);
 
-    let result = expr(directive.value, velement._component._data);
+    let result = expr(directive.value, velement._data);
     let node = document.createTextNode(result);
 
     velement._el.innerHTML = '';
@@ -102,7 +101,7 @@ export default {
       velement.__el = velement._el;
     },
     update(velement, directive) {
-      let res = expr(directive.value, velement._component._data);
+      let res = expr(directive.value, velement._data);
 
       if (res) {
         if (velement.__holder.parentNode) {
@@ -130,7 +129,6 @@ export default {
       let parentNode = directive.meta.parent = velement._el.parentNode
       let holder = directive.meta.holder = document.createComment('for holder')
       template._el.parentNode.replaceChild(holder, template._el)
-
       directive.meta.element = []
     },
     update(velement, directive) {
@@ -141,23 +139,28 @@ export default {
       // item,index in arr 解析
       let { key, value, data } = parseFor(directive.value)
       let iter = expr(data, template._component._data)
-      for (const key in iter) {
-        let vel = directive.meta.template.clone()
+      
+      for (const i in iter) {
+        let vel = directive.meta.template.clone();
+        console.log(vel)
         element.push(vel)
-        key && (vel._data[key] = key)
-        vel._data[value] = iter[key]
+        key && (vel._data[key] = i)
+        vel._data[value] = iter[i]
         parentNode.insertBefore(vel._el, holder)
       }
-      let _render = velement.render
+      
+      let _render = velement.render.bind(velement)
       velement.render = function (param) {
         element.forEach(vm => {
           vm.render()
         })
       }
+
     },
     destory(velement, directive) { }
   }
 }
+
 
 function parseFor(str) {
   let arr = str.split('in')

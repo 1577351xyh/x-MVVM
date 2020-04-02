@@ -5,7 +5,7 @@ import VText from './vtext.js'
 import { assert, getElement } from './common.js'
 
 // 创建虚拟dom数
-export function createVDom(node, component) {
+export function createVDom(node, component,parent) {
   assert(node)
   assert(node._blue)
   assert(component)
@@ -20,10 +20,10 @@ export function createVDom(node, component) {
       //自定义组件
       parse = new VComponents(node, component)
     }
-    parse.$children = node.children.map(child => createVDom(child, component))
+    parse.$children = node.children.map(child => createVDom(child, component ,parse))
     return parse;
   } else if (node.type == 'text') {
     //文本节点
-    return new VText(node, component)
+    return new VText(node, parent)
   }
 }

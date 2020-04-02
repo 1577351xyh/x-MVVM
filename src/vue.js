@@ -8,7 +8,7 @@ import directives from './directive.js'
 export default class Vue {
   constructor(options, component) {
     assert(options);
-    this._directives={
+    this._directives = {
       ...directives,
       ...options.directives
     }
@@ -21,12 +21,14 @@ export default class Vue {
     this.updeted = options.updeted;
 
     this._root = vdomTree;
-    this._statiDate ={
+    this._statiDate = {
       ...options.methods,
     }
+
     this._data = createProxy(options.data,this._statiDate || {}, () => {
       this.render()
     })
+    
     this.status = 'init'
     this.created && this.created.call(this._data)
     //更新--update

@@ -29,6 +29,7 @@ export function createProxy(data, staticDate, cb) {
       }
     }
   }
+
   return new Proxy(res, {
     set(data, name, value) {
       if (typeof value == 'object') {
@@ -47,4 +48,5 @@ export function createProxy(data, staticDate, cb) {
       }
     }
   })
+
 }

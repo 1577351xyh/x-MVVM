@@ -12,7 +12,7 @@ export default class VTxet extends VNode {
   }
   render() {
     this.state='update'
-    let str = compileStringTemplate(this._template,this._component._data)
+    let str = compileStringTemplate(this._template,this._component)
     //系统data
     this._el.data =str; 
   }

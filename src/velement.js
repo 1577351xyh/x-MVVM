@@ -26,6 +26,7 @@ export default class VElment extends VNode {
     this._data = createProxy({}, component._data,()=>{
       this.render()
     })
+    
   }
   render() {
     //渲染自己
