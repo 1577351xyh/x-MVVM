@@ -88,6 +88,9 @@ export function parseDirective(attrs) {
 
     if (attrObj) {
       assert(attrObj.name == 'bind' && attrObj.arg || attrObj.name != 'bind', 'not defind' + key)
+
+      attrObj.meta = {}
+
       attrObj.value = attrs[key]
       directives.push(attrObj)
     }

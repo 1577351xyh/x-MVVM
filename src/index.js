@@ -5,14 +5,15 @@ window.app = new Vue({
   data: {
     a: 3,
     c: 5,
-    show:true
+    show: true,
+    arr: [1, 2, 4, 5, 6]
   },
   methods: {
     fn(ev) {
       this.a++
       console.log(ev)
     },
-    fn2(){
+    fn2() {
       this.show = !this.show;
     }
   },

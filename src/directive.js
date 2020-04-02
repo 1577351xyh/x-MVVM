@@ -1,10 +1,12 @@
 import { assert } from "./common.js"
 import { expr } from './exprsion.js'
 import VElement from './velement.js'
+
 /**
  * 指令
  * {name:'show',arg:undifined,value:'aaa}
  */
+
 export default {
   // {name:'bind',arg:'title',value:'a'}
   bind: {
@@ -123,8 +125,46 @@ export default {
     destory(velement, directive) { }
   },
   'for': {
-    init(velement, directive) { },
-    update(velement, directive) { },
+    init(velement, directive) {
+      let template = directive.meta.template = velement;
+      let parentNode = directive.meta.parent = velement._el.parentNode
+      let holder = directive.meta.holder = document.createComment('for holder')
+      template._el.parentNode.replaceChild(holder, template._el)
+
+      directive.meta.element = []
+    },
+    update(velement, directive) {
+      const template = directive.meta.template;
+      const parentNode = directive.meta.parent
+      const holder = directive.meta.holder
+      const element = directive.meta.element
+      // item,index in arr 解析
+      let { key, value, data } = parseFor(directive.value)
+      let iter = expr(data, template._component._data)
+      for (const key in iter) {
+        let vel = directive.meta.template.clone()
+        element.push(vel)
+        key && (vel._data[key] = key)
+        vel._data[value] = iter[key]
+        parentNode.insertBefore(vel._el, holder)
+      }
+      let _render = velement.render
+      velement.render = function (param) {
+        element.forEach(vm => {
+          vm.render()
+        })
+      }
+    },
     destory(velement, directive) { }
+  }
+}
+
+function parseFor(str) {
+  let arr = str.split('in')
+  let [value, key] = arr[0].split(',');
+  return {
+    key,
+    value,
+    data: arr[1]
   }
 }

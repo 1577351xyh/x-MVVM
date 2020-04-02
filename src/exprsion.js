@@ -97,7 +97,6 @@ export function compileStringTemplate(str, data){
  */
 function parseExpr(str) {
   let arr = [];
-
   while (1) {
     let n = str.search(/'|"/);
     if (n == -1) {
