@@ -13,10 +13,8 @@
   </head>
   <body>
     <div id="app" v-cloak>
-      <button @click="fn2">按钮</button>
-      <!-- <div v-if="show">我是内容</div> -->
-      <!-- 是是是 -->
-      <div v-for="item in arr">
+      {{a}}
+      <div v-for="item,index in arr">
         {{item}}
       </div>
     </div>

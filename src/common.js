@@ -1,17 +1,21 @@
 export function assert(exp, msg) {
   if (!exp) {
-    throw new Error(msg || 'assert fiald')
+    throw new Error(msg || 'assert error');
   }
 }
 
-export function getElement(dom) {
-  assert(dom)
-  let vm;
-  if (typeof dom == 'string') {
-    vm = document.querySelector(dom)
-    assert(vm, `element "${vm}" is not found`);
-  } else if (dom instanceof HTMLElement) {
-    vm = dom
+export function dom(arg) {
+  assert(arg);
+
+  if (typeof arg == 'string') {
+    let res = document.querySelector(arg);
+
+    assert(res);
+
+    return res;
+  } else if (arg instanceof Node) {
+    return arg;
+  } else {
+    assert(false);
   }
-  return vm
 }
