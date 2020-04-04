@@ -5,29 +5,28 @@ import VText from './vtext.js'
 import { assert, dom } from './common.js'
 
 // 创建虚拟dom数
-export function createVDom(node, component, parent){
+export function createVDom(node, parent,component) {
   assert(node);
   assert(node._blue);
-  assert(node.type=='element' || node.type=='text');
-  assert(component);
-  assert(component instanceof VComponent || component instanceof Vue);
+  assert(node.type == 'element' || node.type == 'text');
 
-  if(node.type=='element'){
-    let parent;
+  if (node.type == 'element') {
 
-    if(node.ishtml){
+    if (node.ishtml) {
       //VElement
-      parent=new VElement(node, component);
-    }else{
+      let ele = new VElement(node, parent);
+      ele.$children = node.children.map(child => createVDom(child, ele,component));
+      ele.$root =component;
+      return ele
+    } else {
       //VComponent
-      parent=new VComponent(node, component);
+      let cmp = new VComponent(node, parent);
+      cmp.$children = node.children.map(child => createVDom(child, cmp,cmp));
+      // cmp.$root =cmp;
+
+      return cmp
     }
-
-    //
-    parent.$children=node.children.map(child=>createVDom(child, component, parent));
-
-    return parent;
-  }else{
+  } else {
     //VText
     return new VText(node, parent);
   }

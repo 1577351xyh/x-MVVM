@@ -3,9 +3,9 @@ import VElement from './velement.js';
 
 //自定义组件
 export default class VComponent extends VElement{
-  constructor(options, component){
+  constructor(options, parent){
     assert(options);
-    super(options, component);
+    super(options, parent);
 
     //?
     this.status='init';

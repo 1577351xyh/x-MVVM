@@ -1,23 +1,34 @@
-import {assert} from './common.js';
 
-export function parseDOM(dom){
-  assert(dom);
-  assert(dom instanceof Node);
 
-  if(dom.nodeType==document.ELEMENT_NODE){
-    //1.type——标签
-    let tag=dom.tagName.toLowerCase();
+/**
+ *1.dom编译的内核 
+ * @param {*} dom  
+ */
+import { assert } from './common.js'
 
-    //2.属性
-    let attrs={};
-    Array.from(dom.attributes).forEach(attr=>{
-      attrs[attr.name]=attr.value;
+export function parseDOM(dom) {
+  assert(dom, 'dom is requierd')
+  assert(dom instanceof Node)
+  /**
+   * 1.标签
+   * 2.属性
+   * 3.children
+   */
+  //递归后会出现文本节点,文本节点就会报错
+  if (dom.nodeType == document.ELEMENT_NODE) {
+    /**
+     * 还需要在节点中判断是不是自定义的标签或者是原生html标签
+     * 1.加了 "-" 的自定义标签会被html认为是源生标签
+     */
+    let tag = dom.tagName.toLowerCase()
+    let attrs = {}
+    Array.from(dom.attributes).forEach(attr => {
+      attrs[attr.name] = attr.value;
     });
+    let children = Array.from(dom.childNodes).map(child => parseDOM(child)).filter(child => child !== undefined)
 
-    //3.children
-    let children=Array.from(dom.childNodes).map(child=>parseDOM(child)).filter(child=>child!==undefined);
-
-    let ishtml=dom.constructor!==HTMLUnknownElement&&dom.constructor!==HTMLElement;
+    // 源生标签判断
+    let ishtml = dom.constructor !== HTMLUnknownElement && dom.constructor !== HTMLElement;
 
     return {
       type: 'element',
@@ -28,63 +39,80 @@ export function parseDOM(dom){
       ishtml,
       _blue: true,
     }
-  }else if(dom.nodeType==document.TEXT_NODE){
-    let str=dom.data.trim();
+  } else if (dom.nodeType == document.TEXT_NODE) {
+    let str = dom.data.trim();
 
-    if(str){
+    if (str) {
       return {
         type: 'text',
         el: dom,
         data: str,
         _blue: true,
       }
-    }else{
+    } else {
       return undefined;
     }
   }
 }
 
-export function parseDirective(attrs){
-  assert(attrs);
-  assert(attrs.constructor==Object);
 
-  let directives=[];
 
-  //v-
-  //:   v-bind:xxxx
-  //@   v-on:xxx
+/**
+ *1.指令编译 bind @  
+ * @param {*} dom  
+ */
+export function parseDirective(attrs) {
+  assert(attrs)
+  assert(attrs.constructor == Object)
+  let directives = []
 
-  for(let key in attrs){
-    let direcitve;
+  for (let key in attrs) {
+    let attrObj;
 
-    if(key.startsWith('v-')){  //v-if="xxx" v-bind:xxx="xxx" v-show="xxx" @xxx="aaa"
-      //名字:参数
-      let [name, arg]=key.split(':');
+    if (key.startsWith('v-')) {
+      let [name, arg] = key.split(':')
+      attrObj = { name: name.replace(/^v\-/, ''), arg }
 
-      direcitve={name: name.replace(/^v\-/, ''), arg};
-    }else if(key.startsWith(':')){  //:title
-      direcitve={name: 'bind', arg: key.substring(1)}
-    }else if(key.startsWith('@')){
-      direcitve={name: 'on', arg: key.substring(1)};
+    } else if (key.startsWith(':')) {
+      attrObj = { name: 'bind', arg: key.substring(1) }
+
+    } else if (key.startsWith('@')) {
+      attrObj = { name: 'on', arg: key.substring(1) }
     }
 
-    if(direcitve){
-      assert(direcitve.name=='bind' && direcitve.arg || direcitve.name!='bind', 'not defined what to bind '+key);
-      assert(direcitve.name=='on' && direcitve.arg || direcitve.name!='on', 'event name is not defined');
+    if (attrObj == 'model') {
+      directives.push({
+        name: 'on',
+        arg: 'input',
+        value: `${attrs[key]}=$event.target.value`,
+        meta: {}
+      });
+      directives.push({
+        name: 'bind',
+        arg: 'value',
+        value: attrs[key],
+        meta: {}
+      });
+    } else {
+      assert(attrObj.name == 'bind' && attrObj.arg || attrObj.name != 'bind', 'not defind' + key)
 
-      direcitve.meta={};
+      attrObj.meta = {}
 
-      direcitve.value=attrs[key];
-      directives.push(direcitve);
+      attrObj.value = attrs[key]
+      directives.push(attrObj)
     }
+
   }
-
-  return directives;
+  return directives
 }
 
-export function parseListeners(directives){
-  assert(directives);
-  assert(directives instanceof Array);
+/**
+ * 1.过滤出事件
+ * @param {*} directive 
+ */
 
-  return directives.filter(directive=>directive.name=='on');
+export function parseListeners(directive) {
+  assert(directive)
+  assert(directive instanceof Array)
+  return directive.filter(directive => directive.name == 'on')
 }

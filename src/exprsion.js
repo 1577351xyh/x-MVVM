@@ -4,6 +4,7 @@ const keyword={
   'new': true,
   'class': true,
   'for': true,
+  
 }
 
 //str=> "a"
